@@ -32,9 +32,9 @@ export const auth = betterAuth({
       enabled: false,
     },
     defaultCookieAttributes: {
-      sameSite: "lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       httpOnly: true,
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
     },
   },
 });
