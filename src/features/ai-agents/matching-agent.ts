@@ -178,7 +178,7 @@ Scoring Steps:
 Output Requirements:
 - matchScore: An integer between 0 and 100 calculated using the formula above.
 - matchedSkills: A list of candidate skills that match the required job skills (direct or highly related).
-- missingSkills: A list of required job skills that are missing from the candidate's profile.
+- missingSkills: A list of REQUIRED job skills that are MISSING from the candidate's profile. YOU MUST BE STRICT. If the candidate does not explicitly list the required skill or a highly related synonym, you MUST add it to this missingSkills array. Do not return an empty array unless the candidate is truly a perfect 100% match.
 - recommendationReason: A clear, structured explanation of the candidate's fit. It must include:
   1. A brief overview of candidate's suitability.
   2. The scoring breakdown (e.g. Skills: X/100, Projects: X/100, Experience: X/100, Education: X/100) and how they sum up to the final score.
