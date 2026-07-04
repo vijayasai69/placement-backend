@@ -73,6 +73,14 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", message: "Server is healthy!" });
 });
 
+// Proxy Header Middleware for Better Auth (crucial for Vercel -> Render proxy)
+app.use((req, res, next) => {
+  if (req.headers["x-forwarded-host"]) {
+    req.headers.host = req.headers["x-forwarded-host"] as string;
+  }
+  next();
+});
+
 // Setup Express Routers
 app.use("/api/auth", authRouter);
 
