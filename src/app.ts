@@ -25,6 +25,9 @@ import { profileController } from "./features/candidate-profile/profile.controll
 
 const app = express();
 
+// Trust reverse proxies (Vercel, Render, etc.) to get correct IPs and Host headers
+app.set("trust proxy", 1);
+
 // Standard rate limiter for API security
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
