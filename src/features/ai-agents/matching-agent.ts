@@ -163,10 +163,10 @@ ${formattedExp}
 
 Analysis Guidelines:
 Compare the candidate's profile against the job requirements using the following weighted criteria:
-1. Skills Match (50% weight): Compare candidate's skills against job required skills. Check for direct matches and synonyms.
-2. Projects Relevance (20% weight): Assess how relevant the candidate's projects are to the job description and required technologies.
-3. Experience Relevance (20% weight): Assess how well the candidate's professional experience (roles, responsibilities) aligns with the job.
-4. Education Relevance (10% weight): Assess how well the candidate's educational background (degree, field of study) meets the job requirements.
+1. Skills Match (50% weight): Compare candidate's skills against job required skills. If the job description is short or lacks specific technical skills (e.g., only says "Software Development"), you MUST infer the standard technical skills expected for this specific Job Title in the industry and evaluate the candidate against those inferred skills.
+2. Projects Relevance (20% weight): Assess how relevant the candidate's projects are to the job title and domain.
+3. Experience Relevance (20% weight): Assess how well the candidate's professional experience aligns with the job title.
+4. Education Relevance (10% weight): Assess how well the candidate's educational background meets the role's typical requirements.
 
 Scoring Steps:
 1. Rate Skills Match from 0 to 100.
