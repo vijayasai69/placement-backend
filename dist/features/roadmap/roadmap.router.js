@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.roadmapRouter = void 0;
+const express_1 = require("express");
+const roadmap_controller_js_1 = require("./roadmap.controller.js");
+const auth_middleware_js_1 = require("../../middleware/auth.middleware.js");
+const router = (0, express_1.Router)();
+exports.roadmapRouter = router;
+router.get("/generate", auth_middleware_js_1.authMiddleware, roadmap_controller_js_1.roadmapController.getRoadmap);
+router.post("/verify-step", auth_middleware_js_1.authMiddleware, roadmap_controller_js_1.roadmapController.verifyStep);

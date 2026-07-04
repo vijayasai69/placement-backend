@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.recommendationRouter = void 0;
+const express_1 = require("express");
+const recommendation_controller_js_1 = require("./recommendation.controller.js");
+const auth_middleware_js_1 = require("../../middleware/auth.middleware.js");
+const router = (0, express_1.Router)();
+router.get("/", auth_middleware_js_1.authMiddleware, recommendation_controller_js_1.recommendationController.getRecommendedJobs);
+router.post("/generate", auth_middleware_js_1.authMiddleware, recommendation_controller_js_1.recommendationController.generateRecommendations);
+router.patch("/:id/view", auth_middleware_js_1.authMiddleware, recommendation_controller_js_1.recommendationController.markAsRead);
+exports.recommendationRouter = router;
+exports.default = exports.recommendationRouter;

@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.skillGapRouter = void 0;
+const express_1 = require("express");
+const skill_gap_controller_js_1 = require("./skill-gap.controller.js");
+const auth_middleware_js_1 = require("../../middleware/auth.middleware.js");
+const router = (0, express_1.Router)();
+router.get("/missing", auth_middleware_js_1.authMiddleware, skill_gap_controller_js_1.skillGapController.getMissingSkills);
+exports.skillGapRouter = router;
+exports.default = exports.skillGapRouter;

@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.resumeRouter = void 0;
+const express_1 = require("express");
+const resume_controller_js_1 = require("./resume.controller.js");
+const auth_middleware_js_1 = require("../../middleware/auth.middleware.js");
+const router = (0, express_1.Router)();
+router.post("/upload", auth_middleware_js_1.authMiddleware, resume_controller_js_1.uploadMiddleware, resume_controller_js_1.resumeController.uploadResume);
+router.get("/", auth_middleware_js_1.authMiddleware, resume_controller_js_1.resumeController.getResume);
+router.get("/history", auth_middleware_js_1.authMiddleware, resume_controller_js_1.resumeController.getResumeHistory);
+router.get("/download/:profileId", auth_middleware_js_1.authMiddleware, resume_controller_js_1.resumeController.downloadResume);
+router.delete("/profile/:profileId", auth_middleware_js_1.authMiddleware, resume_controller_js_1.resumeController.deleteResumeProfile);
+router.delete("/reset", auth_middleware_js_1.authMiddleware, resume_controller_js_1.resumeController.resetUserData);
+exports.resumeRouter = router;
+exports.default = exports.resumeRouter;
