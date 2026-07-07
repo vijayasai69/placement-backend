@@ -53,39 +53,68 @@ export class ResumeController {
       await fs.writeFile(fullPath, req.file.buffer);
 
       // Trigger parsing service
-      const { resume, profile } = await resumeService.handleResumeUpload(
+      const { resume } = await resumeService.handleResumeUpload(
         userId,
         filePath,
         req.file.buffer,
         req.file.originalname
       );
 
-      res.status(200).json({
+      res.status(202).json({
         success: true,
-        message: "Resume uploaded successfully. Parsing completed.",
+        message: "Resume uploaded successfully. Parsing in background.",
         data: {
           id: resume.id,
           filePath: resume.filePath,
-          processingStatus: "ANALYZED",
+          processingStatus: resume.processingStatus,
           uploadedAt: resume.uploadedAt,
-        },
-        profile: {
-          id: profile?.id,
-          userId: profile?.userId,
-          skills: profile?.skills || [],
-          education: profile?.education || [],
-          projects: profile?.projects || [],
-          certifications: profile?.certifications || [],
-          experience: profile?.experience || [],
-          atsScore: profile?.atsScore || 70,
-          readability: profile?.readability || 70,
-          keywordMatch: profile?.keywordMatch || 70,
-          formatScore: profile?.formatScore || 70,
-          strengths: profile?.strengths || [],
-          improvements: profile?.improvements || [],
-          fileName: profile?.fileName || req.file.originalname,
-          analysisDate: profile?.analysisDate || new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
         }
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getResumeStatus(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: { message: "Unauthorized", status: 401 }
+        });
+      }
+
+      const { jobId } = req.params;
+      const { PrismaClient } = await import('@prisma/client');
+      const prisma = new PrismaClient();
+
+      const resume = await prisma.resume.findUnique({
+        where: { id: jobId }
+      });
+
+      if (!resume || resume.userId !== userId) {
+        return res.status(404).json({
+          success: false,
+          error: { message: "Resume job not found", status: 404 }
+        });
+      }
+
+      let profile = null;
+      if (resume.processingStatus === "ANALYZED") {
+        profile = await prisma.candidateProfile.findFirst({
+          where: { userId },
+          orderBy: { createdAt: 'desc' },
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        data: {
+          id: resume.id,
+          processingStatus: resume.processingStatus,
+        },
+        profile
       });
     } catch (error) {
       next(error);

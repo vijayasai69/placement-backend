@@ -23,22 +23,20 @@ export class ResumeService {
       },
     });
 
-    // 2. Parse and analyze resume synchronously
-    await this.parseAndAnalyzeResume(userId, resume.id, fileBuffer, filePath, fileName);
-
-    // 3. Generate recommendations asynchronously so the upload finishes quickly (<20s)
-    const { recommendationService } = await import("../recommendations/recommendation.service.js");
-    recommendationService.generateRecommendations(userId).catch((err) => {
-      logger.error(`Failed to generate recommendations for user ${userId}:`, err);
+    // 2. Parse and analyze resume asynchronously
+    this.parseAndAnalyzeResume(userId, resume.id, fileBuffer, filePath, fileName).then(() => {
+      // 3. Generate recommendations asynchronously once parsing completes
+      import("../recommendations/recommendation.service.js").then(({ recommendationService }) => {
+        recommendationService.generateRecommendations(userId).catch((err) => {
+          logger.error(`Failed to generate recommendations for user ${userId}:`, err);
+        });
+      });
+    }).catch((err) => {
+      logger.error(`Resume processing background job failed for user ${userId}:`, err);
     });
 
-    // 4. Retrieve the updated profile
-    const profile = await prisma.candidateProfile.findFirst({
-      where: { userId },
-      orderBy: { createdAt: 'desc' },
-    });
-
-    return { resume, profile };
+    // 4. Return immediately with the resume record
+    return { resume };
   }
 
   private async parseAndAnalyzeResume(userId: string, resumeId: string, buffer: Buffer, filePath: string, fileName: string) {
