@@ -41,7 +41,7 @@ export class RecommendationService {
           matchScore: Math.round(rec.matchScore),
           salary: "$80,000 - $110,000",
           skills: job?.requiredSkills || [],
-          aiInsight: rec.matchScore > 85 ? "High Fit" : "Medium Fit",
+          aiInsight: rec.matchScore >= 80 ? "High Fit" : rec.matchScore >= 50 ? "Medium Fit" : "Low Fit",
           description: job?.description || "",
           applyUrl: job?.applyLink || "#",
           source: job?.source || "LinkedIn",
