@@ -49,12 +49,22 @@ app.use(helmet({
   crossOriginOpenerPolicy: false,
 }));
 app.use(cors({
-  origin: [
-    "http://localhost:5173", 
-    "http://localhost:3000",
-    "https://placement-recommendation-ai.vercel.app",
-    ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : [])
-  ],
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      "http://localhost:5173", 
+      "http://localhost:3000",
+      "https://placement-recommendation-ai.vercel.app",
+    ];
+    if (process.env.FRONTEND_URL) allowedOrigins.push(process.env.FRONTEND_URL);
+
+    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
