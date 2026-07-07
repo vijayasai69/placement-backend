@@ -25,6 +25,7 @@ export const auth = betterAuth({
   trustedOrigins: [
     env.BETTER_AUTH_URL, 
     "http://localhost:5173",
+    "https://placement-recommendation-ai.vercel.app",
     ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : [])
   ],
   advanced: {
