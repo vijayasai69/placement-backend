@@ -28,6 +28,8 @@ const auth_middleware_js_1 = require("./middleware/auth.middleware.js");
 const profile_controller_js_1 = require("./features/candidate-profile/profile.controller.js");
 const app = (0, express_1.default)();
 exports.app = app;
+// Trust reverse proxies (Vercel, Render, etc.) to get correct IPs and Host headers
+app.set("trust proxy", 1);
 // Standard rate limiter for API security
 const apiLimiter = (0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -48,7 +50,11 @@ app.use((0, helmet_1.default)({
     crossOriginOpenerPolicy: false,
 }));
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:5173", "http://localhost:3000"],
+    origin: [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : [])
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
@@ -63,6 +69,13 @@ app.use(apiLimiter);
 // Health check endpoint
 app.get("/health", (req, res) => {
     res.status(200).json({ status: "ok", message: "Server is healthy!" });
+});
+// Proxy Header Middleware for Better Auth (crucial for Vercel -> Render proxy)
+app.use((req, res, next) => {
+    if (req.headers["x-forwarded-host"]) {
+        req.headers.host = req.headers["x-forwarded-host"];
+    }
+    next();
 });
 // Setup Express Routers
 app.use("/api/auth", auth_router_js_1.authRouter);

@@ -10,7 +10,7 @@ const roadmapSchema = z.object({
     description: z.string(),
     targetSkills: z.array(z.string()).describe("An array of 2 to 3 specific technical skills or keywords this milestone focuses on (e.g. ['Node.js', 'MySQL'])."),
     status: z.enum(["completed", "in-progress", "pending"]),
-    date: z.string(),
+    date: z.string().describe("The target date (e.g., 'Target: Dec 2026'). MUST be in the year 2026 or later."),
   }))
 });
 
@@ -37,6 +37,7 @@ export class RoadmapAgent {
     }
 
     const currentMonthYear = new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    const currentYear = new Date().getFullYear();
 
     const prompt = `
       You are an expert tech career coach and technical recruiter. 
@@ -56,7 +57,8 @@ export class RoadmapAgent {
       - 'targetSkills' which MUST be an array of 2 to 3 specific hard technical skills or programming languages the candidate is deficient in for this step (e.g., ['Node.js', 'MySQL']). DO NOT use generic terms like 'Certifications', 'Advanced Concepts', or 'Soft Skills'. It must be an exact search keyword for finding technical courses.
       - A detailed but brief 'description' of what they should accomplish.
       - A 'status' of either "completed", "in-progress", or "pending". (The first step can be "completed" representing their baseline, next "in-progress", and future ones "pending").
-      - A 'date' representing the target timeframe. The current date is ${currentMonthYear}. Ensure future milestones have a target date AFTER ${currentMonthYear} (e.g. "Target: Oct 2026", "Target: Q1 2027"). The completed baseline can be "Completed ${currentMonthYear}".
+      - A 'date' representing the target timeframe. The current date is ${currentMonthYear}. 
+      CRITICAL DATE INSTRUCTION: You MUST use future dates. The current year is ${currentYear}. Every future milestone MUST have a target date in ${currentYear} or ${currentYear + 1} (e.g. "Target: Oct ${currentYear}", "Target: Q1 ${currentYear + 1}"). NEVER use a year in the past (like 2024 or 2025). The completed baseline can be "Completed ${currentMonthYear}".
 
       Ensure you output a JSON matching the requested structure.
     `;

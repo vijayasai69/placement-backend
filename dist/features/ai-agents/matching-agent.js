@@ -118,10 +118,10 @@ ${formattedExp}
 
 Analysis Guidelines:
 Compare the candidate's profile against the job requirements using the following weighted criteria:
-1. Skills Match (50% weight): Compare candidate's skills against job required skills. Check for direct matches and synonyms.
-2. Projects Relevance (20% weight): Assess how relevant the candidate's projects are to the job description and required technologies.
-3. Experience Relevance (20% weight): Assess how well the candidate's professional experience (roles, responsibilities) aligns with the job.
-4. Education Relevance (10% weight): Assess how well the candidate's educational background (degree, field of study) meets the job requirements.
+1. Skills Match (50% weight): Compare candidate's skills against job required skills. If the job description is short or lacks specific technical skills (e.g., only says "Software Development"), you MUST infer the standard technical skills expected for this specific Job Title in the industry and evaluate the candidate against those inferred skills.
+2. Projects Relevance (20% weight): Assess how relevant the candidate's projects are to the job title and domain.
+3. Experience Relevance (20% weight): Assess how well the candidate's professional experience aligns with the job title.
+4. Education Relevance (10% weight): Assess how well the candidate's educational background meets the role's typical requirements.
 
 Scoring Steps:
 1. Rate Skills Match from 0 to 100.
@@ -133,7 +133,7 @@ Scoring Steps:
 Output Requirements:
 - matchScore: An integer between 0 and 100 calculated using the formula above.
 - matchedSkills: A list of candidate skills that match the required job skills (direct or highly related).
-- missingSkills: A list of required job skills that are missing from the candidate's profile.
+- missingSkills: A list of REQUIRED job skills that are MISSING from the candidate's profile. YOU MUST BE STRICT. If the candidate does not explicitly list the required skill or a highly related synonym, you MUST add it to this missingSkills array. Do not return an empty array unless the candidate is truly a perfect 100% match.
 - recommendationReason: A clear, structured explanation of the candidate's fit. It must include:
   1. A brief overview of candidate's suitability.
   2. The scoring breakdown (e.g. Skills: X/100, Projects: X/100, Experience: X/100, Education: X/100) and how they sum up to the final score.

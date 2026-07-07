@@ -24,15 +24,19 @@ exports.auth = (0, better_auth_1.betterAuth)({
             clientSecret: env_js_1.env.GITHUB_CLIENT_SECRET || "",
         },
     },
-    trustedOrigins: [env_js_1.env.BETTER_AUTH_URL, "http://localhost:5173"],
+    trustedOrigins: [
+        env_js_1.env.BETTER_AUTH_URL,
+        "http://localhost:5173",
+        ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : [])
+    ],
     advanced: {
         crossSubDomainCookies: {
             enabled: false,
         },
         defaultCookieAttributes: {
-            sameSite: "lax",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             httpOnly: true,
-            secure: false,
+            secure: process.env.NODE_ENV === "production",
         },
     },
 });
