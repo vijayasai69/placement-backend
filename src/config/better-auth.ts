@@ -26,6 +26,7 @@ export const auth = betterAuth({
     env.BETTER_AUTH_URL, 
     "http://localhost:5173",
     "https://placement-recommendation-ai.vercel.app",
+    "https://placement-frontend-mu.vercel.app",
     ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : [])
   ],
   advanced: {
