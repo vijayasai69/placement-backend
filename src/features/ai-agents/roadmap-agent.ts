@@ -36,6 +36,8 @@ export class RoadmapAgent {
       throw new Error("No candidate profile found to generate a roadmap. Please upload a resume first.");
     }
 
+    const currentMonthYear = new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+
     const prompt = `
       You are an expert tech career coach and technical recruiter. 
       Based on the candidate's profile data, generate a realistic, structured, 4 to 5 step career roadmap to help them reach a senior engineering or target placement role.
@@ -54,7 +56,7 @@ export class RoadmapAgent {
       - 'targetSkills' which MUST be an array of 2 to 3 specific hard technical skills or programming languages the candidate is deficient in for this step (e.g., ['Node.js', 'MySQL']). DO NOT use generic terms like 'Certifications', 'Advanced Concepts', or 'Soft Skills'. It must be an exact search keyword for finding technical courses.
       - A detailed but brief 'description' of what they should accomplish.
       - A 'status' of either "completed", "in-progress", or "pending". (The first step can be "completed" representing their baseline, next "in-progress", and future ones "pending").
-      - A 'date' representing the target timeframe (e.g. "Completed Jun 2024", "Target: Jul 2024", "Target: Q3 2024").
+      - A 'date' representing the target timeframe. The current date is ${currentMonthYear}. Ensure future milestones have a target date AFTER ${currentMonthYear} (e.g. "Target: Oct 2026", "Target: Q1 2027"). The completed baseline can be "Completed ${currentMonthYear}".
 
       Ensure you output a JSON matching the requested structure.
     `;
